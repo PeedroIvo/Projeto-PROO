@@ -1,10 +1,9 @@
 package sei;
 
-public class index {
+public class Index {
 
 	public static void main(String[] args) {
 		
-
 	}
 
 }
