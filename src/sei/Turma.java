@@ -1,7 +1,7 @@
 package sei;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Turma {
 	private int codTurma;
@@ -9,7 +9,7 @@ public class Turma {
 	private char turno;
 	private int ano;
 	private String sala;
-	private List<Aluno> alunos = new ArrayList<>();
+	private Map<Integer, String> alunos = new HashMap<>();
 
 	public int getCodTurma() {
 		return codTurma;
@@ -50,12 +50,12 @@ public class Turma {
 	public void setSala(String sala) {
 		this.sala = sala;
 	}
-
-	public void addAluno(Aluno aluno) {
-		alunos.add(aluno);
+	
+	public void addAluno(int cod, String nome) {
+		alunos.put(cod, nome);
 	}
 
-	public List<Aluno> getAlunos() {
+	public Map<Integer, String> getAlunos() {
 		return alunos;
 	}
 }

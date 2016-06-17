@@ -1,6 +1,6 @@
 package sei;
 
-public abstract class DadosPessoais {
+public class DadosPessoais {
 	private String cpf;
 	private String rg;
 	private String email;

@@ -1,6 +1,6 @@
 package sei;
 
-public abstract class Endereco {
+public class Endereco {
 	private String cep;
 	private String rua;
 	private String nCasa;

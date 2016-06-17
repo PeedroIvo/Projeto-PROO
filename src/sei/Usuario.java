@@ -1,6 +1,6 @@
 package sei;
 
-public abstract class Usuario {
+public class Usuario {
 	private int codUsuario;
 	private String login;
 	private String senha;

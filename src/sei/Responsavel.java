@@ -1,7 +1,7 @@
 package sei;
 
 public class Responsavel extends Usuario {
-	DadosPessoais dadosPessoais;
+	private DadosPessoais dadosPessoais;
 
 	public DadosPessoais getDadosPessoais() {
 		return dadosPessoais;
