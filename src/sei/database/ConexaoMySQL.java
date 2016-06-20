@@ -1,4 +1,4 @@
-package sei;
+package sei.database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -23,6 +23,7 @@ public class ConexaoMySQL implements IConexao {
 	public void fecharConexao() {
 		try {
 			ConexaoMySQL.conexao.close();
+			System.out.println("Desconectado!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
