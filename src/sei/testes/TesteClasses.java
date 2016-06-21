@@ -1,6 +1,8 @@
-package sei;
+package sei.testes;
 
-public class IndexTeste {
+import sei.*;
+
+public class TesteClasses {
 
 	public static void main(String[] args) {
 		Professor professor = new Professor();
