@@ -1,4 +1,4 @@
-package sei.testes;
+package sei.experiencias;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 import sei.database.ConexaoMySQL;
 
-public class TesteBanco {
+public class ExperimentandoBD {
 	
 	public static void main(String[] args) {
 		ConexaoMySQL mysql = new ConexaoMySQL();

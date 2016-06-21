@@ -1,14 +1,13 @@
-package sei.testes;
+package sei.experiencias;
 
 import sei.*;
 
-public class TesteClasses {
+public class ExperimentandoClasses {
 
 	public static void main(String[] args) {
 		Professor professor = new Professor();
 		Disciplina disciplina = new Disciplina();
 		Turma turma = new Turma();
-		Responsavel resp = new Responsavel();
 		Aluno aluno1 = new Aluno();
 		Aluno aluno2 = new Aluno();
 
@@ -25,21 +24,16 @@ public class TesteClasses {
 		disciplina.setProfResponsavel(professor);
 		disciplina.setTurma(turma);
 		disciplina.setSigla("ING");
-
-		resp.setCodUsuario(2);
-		resp.setTipoUsuario('r');
 		
 		aluno1.setNome("Aluno 1");
 		aluno1.setCodUsuario(3);
-		aluno1.setResponsavel(resp);
 		aluno1.setTipoUsuario('a');
-		aluno1.setTurmaAtual(turma);
+		aluno1.setCodTurmaAtual(turma.getCodTurma());
 
 		aluno2.setNome("Aluno 2");
 		aluno2.setCodUsuario(4);
-		aluno2.setResponsavel(resp);
 		aluno1.setTipoUsuario('a');
-		aluno1.setTurmaAtual(turma);
+		aluno1.setCodTurmaAtual(turma.getCodTurma());
 
 		turma.addAluno(aluno1.getCodUsuario(), aluno1.getNome());
 		turma.addAluno(aluno2.getCodUsuario(), aluno2.getNome());

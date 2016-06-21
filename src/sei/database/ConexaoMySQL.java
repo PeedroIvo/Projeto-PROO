@@ -13,7 +13,7 @@ public class ConexaoMySQL implements IConexao {
 		conexao = null;
 		try {
 			conexao = DriverManager.getConnection(baseDados+"://"+enderecoBanco+"/"+ nomeBanco, usuario, senha);
-			System.out.println("Conectado!");
+			//System.out.println("Conectado!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -23,7 +23,7 @@ public class ConexaoMySQL implements IConexao {
 	public void fecharConexao() {
 		try {
 			ConexaoMySQL.conexao.close();
-			System.out.println("Desconectado!");
+			//System.out.println("Desconectado!");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

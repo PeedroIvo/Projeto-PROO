@@ -1,5 +1,7 @@
 package sei;
 
+import java.sql.Connection;
+
 public class Usuario {
 	private int codUsuario;
 	private String login;
@@ -45,5 +47,9 @@ public class Usuario {
 
 	public void setTipoUsuario(char tipoUsuario) {
 		this.tipoUsuario = tipoUsuario;
+	}
+	
+	public boolean menu(Connection conexao) {
+		return false;
 	}
 }

@@ -2,7 +2,7 @@ package sei;
 
 public class Professor extends Usuario {
 	private String dataAdmissao;
-	private DadosPessoais dadosPessoais;
+	private DadosPessoais dadosPessoais = new DadosPessoais();
 
 	public String getDataAdmissao() {
 		return dataAdmissao;
