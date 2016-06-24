@@ -22,7 +22,7 @@ public class ExperimentandoClasses {
 		disciplina.setCodDisciplina(1);
 		disciplina.setNome("Ingles");
 		disciplina.setProfResponsavel(professor);
-		disciplina.setTurma(turma);
+		disciplina.setCodTurma(turma.getCodTurma());
 		disciplina.setSigla("ING");
 		
 		aluno1.setNome("Aluno 1");
@@ -35,12 +35,14 @@ public class ExperimentandoClasses {
 		aluno1.setTipoUsuario('a');
 		aluno1.setCodTurmaAtual(turma.getCodTurma());
 
-		turma.addAluno(aluno1.getCodUsuario(), aluno1.getNome());
-		turma.addAluno(aluno2.getCodUsuario(), aluno2.getNome());
-
+		turma.addAluno(aluno1);
+		turma.addAluno(aluno2);
+		
+		/*
 		disciplina.addNota(1, aluno1.getCodUsuario(), 10);
 		disciplina.addNota(1, aluno2.getCodUsuario(), 8.5);
 
 		disciplina.imprimeNotas(1);
+		*/
 	}
 }

@@ -40,6 +40,7 @@ public class Sessao {
 	}
 	
 	public boolean fazerLogin(Connection conexao, String loginDigitado, String senhaDigitada) {
+		System.out.println(loginDigitado);
 		try (PreparedStatement stmt = conexao.prepareStatement("select * from usuario where login='" + loginDigitado + "'");
 				ResultSet rs = stmt.executeQuery();) {
 			if (rs.first()) {
@@ -47,6 +48,10 @@ public class Sessao {
 					
 					if(rs.getString("tipoUsuario").equals("0")) {
 						this.setUsuarioAtual(new Administrador());
+					} else if(rs.getString("tipoUsuario").equals("a")) {
+						this.setUsuarioAtual(new Aluno());
+					} else if(rs.getString("tipoUsuario").equals("p")) {
+						this.setUsuarioAtual(new Professor());
 					}
 					
 					this.usuarioAtual.setCodUsuario(rs.getInt("codUsuario"));

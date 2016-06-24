@@ -1,3 +1,9 @@
-Implementar Criar Nova Turma
-Tratar excessões de matricular aluno
+Implementar editarProfessores
+
+Tratar excessões
 Criar testes unitarios para métodos...
+
+Implementar mudar senha
+
+Modo de Sair do Programa no Index
+Dividir Menu de Adm em Categorias

@@ -2,14 +2,13 @@ package sei;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class Disciplina {
 	private int codDisciplina;
 	private String nome;
 	private String sigla;
 	private Professor profResponsavel;
-	private Turma turma;
+	private int codTurma;
 
 	private Map<Integer, Double> notasB1 = new HashMap<>();
 	private Map<Integer, Double> notasB2 = new HashMap<>();
@@ -48,12 +47,12 @@ public class Disciplina {
 		this.profResponsavel = profResponsavel;
 	}
 
-	public Turma getTurma() {
-		return turma;
+	public int getCodTurma() {
+		return codTurma;
 	}
 
-	public void setTurma(Turma turma) {
-		this.turma = turma;
+	public void setCodTurma(int codTurma) {
+		this.codTurma = codTurma;
 	}
 
 	public Map<Integer, Double> getNotasB1() {
@@ -70,41 +69,5 @@ public class Disciplina {
 
 	public Map<Integer, Double> getNotasB4() {
 		return notasB4;
-	}
-
-	public void addNota(int bimestre, int matricAluno, double nota) {
-		if (bimestre == 1) {
-			notasB1.put(matricAluno, nota);
-		} else if (bimestre == 2) {
-			notasB2.put(matricAluno, nota);
-		} else if (bimestre == 3) {
-			notasB3.put(matricAluno, nota);
-		} else if (bimestre == 4) {
-			notasB4.put(matricAluno, nota);
-		}
-	}
-
-	public void imprimeNotas(int bimestre) {
-		if (bimestre == 1) {
-			Set<Integer> codigos = this.getNotasB1().keySet();
-			for (int cod : codigos) {
-				System.out.println(this.getTurma().getAlunos().get(cod) + ": " + this.getNotasB1().get(cod));
-			}
-		} else if (bimestre == 2) {
-			Set<Integer> codigos = this.getNotasB2().keySet();
-			for (int cod : codigos) {
-				System.out.println(this.getTurma().getAlunos().get(cod) + ": " + this.getNotasB2().get(cod));
-			}
-		} else if (bimestre == 3) {
-			Set<Integer> codigos = this.getNotasB3().keySet();
-			for (int cod : codigos) {
-				System.out.println(this.getTurma().getAlunos().get(cod) + ": " + this.getNotasB3().get(cod));
-			}
-		} else if (bimestre == 4) {
-			Set<Integer> codigos = this.getNotasB4().keySet();
-			for (int cod : codigos) {
-				System.out.println(this.getTurma().getAlunos().get(cod) + ": " + this.getNotasB4().get(cod));
-			}
-		}
 	}
 }
