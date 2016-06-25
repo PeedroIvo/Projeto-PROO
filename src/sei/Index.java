@@ -1,29 +1,19 @@
 package sei;
 
-import java.sql.Connection;
-
-import sei.database.ConexaoMySQL;
-
 public class Index {
 
 	public static void main(String[] args) { 
+		Sessao sessao = new Sessao();
 		
-		ConexaoMySQL mysql = new ConexaoMySQL();
-	    Connection conexao = mysql.getConexao("jdbc:mysql", "localhost:3306", "sei", "root", "");
+		boolean statusSessao;
 		
-		Sessao sessao = new Sessao(conexao);
-		
-		System.out.println("\nOlá, " + sessao.getUsuarioAtual().getNome() + "! O que deseja fazer?");
-		
-		if (sessao.getUsuarioAtual().getTipoUsuario() == '0') {
-			if(!sessao.getUsuarioAtual().menu(conexao)) {
-				sessao.telaBoasVindas();
+		do {
+			statusSessao = sessao.iniciarSessao();
+			
+			if (statusSessao) {
+				sessao.getUsuarioAtual().menu(sessao.getConexao());
 			}
-		}
-		
-		mysql.fecharConexao();
-
-    }
-
+		} while (statusSessao);
+	}
 }
 

@@ -2,13 +2,22 @@ package sei;
 
 import java.sql.Connection;
 
-public class Usuario {
+public abstract class Usuario {
+	protected Connection conexao;
 	private int codUsuario;
 	private String login;
 	private String senha;
 	private String nome;
 	private char tipoUsuario;
+	
+	public Connection getConexao() {
+		return conexao;
+	}
 
+	public void setConexao(Connection conexao) {
+		this.conexao = conexao;
+	}
+	
 	public int getCodUsuario() {
 		return codUsuario;
 	}
@@ -49,7 +58,5 @@ public class Usuario {
 		this.tipoUsuario = tipoUsuario;
 	}
 	
-	public boolean menu(Connection conexao) {
-		return false;
-	}
+	public abstract void menu(Connection conexao);
 }

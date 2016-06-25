@@ -1,4 +1,4 @@
-package sei.database;
+package sei.persistencia.conexao;
 
 import java.sql.Connection;
 import java.sql.SQLException;

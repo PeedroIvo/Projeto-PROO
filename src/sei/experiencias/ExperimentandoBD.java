@@ -5,7 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import sei.database.ConexaoMySQL;
+import sei.persistencia.conexao.ConexaoMySQL;
 
 public class ExperimentandoBD {
 	

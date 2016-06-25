@@ -1,11 +1,10 @@
 package sei;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Scanner;
 
 public class Aluno extends Usuario {
+	private Scanner input = new Scanner(System.in);
 	
 	private int idade;
 	private char sexo;
@@ -44,38 +43,31 @@ public class Aluno extends Usuario {
 		this.codTurmaAtual = codTurmaAtual;
 	}
 	
-	public void criar (Connection conexao, Aluno aluno) {
-		String sql = "insert into usuario (login, nome, tipoUsuario) values (?, ?, ?)";
-		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-			stmt.setString(1, aluno.getLogin());
-			stmt.setString(2, aluno.getNome());
-			stmt.setString(3, "a");
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	@Override
+	public void menu(Connection conexao) {
+		this.setConexao(conexao);
+		int opcao;
 		
-		sql = "select codUsuario from usuario where login='" + aluno.getLogin() + "'";
-		try (PreparedStatement stmt = conexao.prepareStatement(sql);
-				ResultSet rs = stmt.executeQuery();) {
-			while (rs.next()) {
-				aluno.setCodUsuario(rs.getInt(1));
+		do {
+			System.out.println("-------------------------------------");
+			System.out.println("Olá, " + this.getNome() + "! O que deseja fazer?");
+			System.out.println("[1] -");
+			System.out.println("[2] Logout");
+
+			do {
+				System.out.print("Digite sua opção: ");
+				opcao = input.nextInt();
+
+				if (opcao <= 0 || opcao > 5) {
+					System.out.println("Opção inválida! Tente novamente!");
+				}
+			} while (opcao <= 0 || opcao > 5);
+			
+			System.out.println();
+
+			if (opcao == 1) {
+
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		sql = "insert into aluno (matricAluno, codTurmaAtual, idade, sexo) values (?, ?, ?, ?)";
-		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-			stmt.setInt(1, aluno.getCodUsuario());
-			stmt.setInt(2, aluno.getCodTurmaAtual());
-			stmt.setInt(3, aluno.getIdade());
-			stmt.setString(4, String.valueOf(aluno.getSexo()));
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		aluno.getDadosPessoais().criar(conexao, aluno.getCodUsuario(), aluno.getDadosPessoais());
+		} while (opcao != 2);
 	}
 }

@@ -7,21 +7,27 @@ import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Scanner;
 
-public class Administrador extends Usuario {
-	
-	private Connection conexao;
-	private Scanner input = new Scanner(System.in);
+import sei.persistencia.crud.AlunoCRUD;
+import sei.persistencia.crud.ProfessorCRUD;
 
-	public boolean menu(Connection conexao) {
-		this.conexao = conexao;
+public class Administrador extends Usuario {
+	private Scanner input = new Scanner(System.in);
+	private AlunoCRUD alunoCRUD = new AlunoCRUD();
+	private ProfessorCRUD professorCRUD = new ProfessorCRUD();
+	
+	@Override
+	public void menu(Connection conexao) {
+		this.setConexao(conexao);
 		int opcao;
 		
 		do {
+			System.out.println("-------------------------------------");
+			System.out.println("Olá, " + this.getNome() + "! O que deseja fazer?");
 			System.out.println("[1] Matricular aluno");
 			System.out.println("[2] Desmatricular aluno");
 			System.out.println("[3] Cadastrar professor");
-			System.out.println("[4] Editar professores");
-			System.out.println("[5] Sair");
+			System.out.println("[4] Quadro de professores");
+			System.out.println("[5] Logout");
 
 			do {
 				System.out.print("Digite sua opção: ");
@@ -31,19 +37,19 @@ public class Administrador extends Usuario {
 					System.out.println("Opção inválida! Tente novamente!");
 				}
 			} while (opcao <= 0 || opcao > 5);
+			
+			System.out.println();
 
 			if (opcao == 1) {
 				this.matricularAluno();
 			} else if (opcao == 2) {
-				this.cancelarMatriculaAluno();
+				this.desmatricularAluno();
 			} else if (opcao == 3) {
 				this.cadastrarProfessor();
 			} else if (opcao == 4) {
 				
 			}
 		} while (opcao != 5);
-
-		return false;
 	}
 	
 	public void matricularAluno() {
@@ -51,7 +57,7 @@ public class Administrador extends Usuario {
 		
 		novoAluno.setTipoUsuario('a');
 		
-		System.out.println("\nDigite os dados do novo aluno abaixo:");
+		System.out.println("Digite os dados do novo aluno abaixo:");
 		
 		input.nextLine();
 		System.out.print("Nome: ");
@@ -111,6 +117,8 @@ public class Administrador extends Usuario {
 		
 		int serie;
 		
+		System.out.println();
+		
 		do {
 			System.out.print("Série (1, 2 ou 3): ");
 			serie = input.nextInt();
@@ -144,10 +152,9 @@ public class Administrador extends Usuario {
 			}
 		} while (!this.verificaLogin(novoAluno.getLogin()));
 		
-		novoAluno.criar(conexao, novoAluno);
+		alunoCRUD.criar(conexao, novoAluno);
 		
-		System.out.println("\nAluno matriculado com sucesso!\nLogin: " + novoAluno.getLogin() + "\nSenha Padrão: 123456");
-		System.out.println("-----------------------------------------------\n");
+		System.out.println("\nAluno matriculado com sucesso!\nLogin: " + novoAluno.getLogin() + "\nSenha Padrão: 123456\n");
 	}
 	
 	public boolean verificaLogin(String loginDigitado) {
@@ -176,8 +183,8 @@ public class Administrador extends Usuario {
 		return 0;
 	}
 	
-	public void cancelarMatriculaAluno() {
-		System.out.println("\nAtenção! O cancelamento de matrícula não poderá ser desfeito!");
+	public void desmatricularAluno() {
+		System.out.println("Atenção! O cancelamento de matrícula não poderá ser desfeito!");
 		System.out.print("Digite o código de matrícula do Aluno: ");
 		int cod = input.nextInt();
 		
@@ -194,33 +201,12 @@ public class Administrador extends Usuario {
 			} while (resposta != 'S' && resposta != 'N');
 			
 			if (resposta == 'S') {
-				try (PreparedStatement stmt = conexao.prepareStatement("delete from aluno where matricAluno='" + cod + "'");) {
-					stmt.executeUpdate();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-				
-				try (PreparedStatement stmt = conexao.prepareStatement("delete from endereco where codUsuario='" + cod + "'");) {
-					stmt.executeUpdate();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-				
-				try (PreparedStatement stmt = conexao.prepareStatement("delete from dadosPessoais where codUsuario='" + cod + "'");) {
-					stmt.executeUpdate();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-				
-				try (PreparedStatement stmt = conexao.prepareStatement("delete from usuario where codUsuario='" + cod + "'");) {
-					stmt.executeUpdate();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
+				this.alunoCRUD.apagar(conexao, cod);
 				
 				System.out.println("\nCancelamento de matrícula efetuado com sucesso!");
-				System.out.println("-----------------------------------------------\n");
 			}
+			
+			System.out.println();
 		}
 	}
 	
@@ -247,9 +233,9 @@ public class Administrador extends Usuario {
 		Calendar cal = Calendar.getInstance(); 
 		novoProfessor.setDataAdmissao(cal.get(Calendar.YEAR) + "/" + (cal.get(Calendar.MONTH)+1) + "/" + cal.get(Calendar.DAY_OF_MONTH));
 		
-		novoProfessor.setTipoUsuario('a');
+		novoProfessor.setTipoUsuario('p');
 		
-		System.out.println("\nDigite os dados do novo professor abaixo:");
+		System.out.println("Digite os dados do novo professor abaixo:");
 		
 		input.nextLine();
 		System.out.print("Nome: ");
@@ -306,13 +292,12 @@ public class Administrador extends Usuario {
 			}
 		} while (!this.verificaLogin(novoProfessor.getLogin()));
 		
-		novoProfessor.criar(conexao, novoProfessor);
+		professorCRUD.criar(conexao, novoProfessor);
 		
-		System.out.println("\nProfessor matriculado com sucesso!\nLogin: " + novoProfessor.getLogin() + "\nSenha Padrão: 123456");
-		System.out.println("-----------------------------------------------\n");
+		System.out.println("\nProfessor matriculado com sucesso!\nLogin: " + novoProfessor.getLogin() + "\nSenha Padrão: 123456\n");
 	}
 	
-	public void editarProfessores() {
+	public void quadroProfessores() {
 		
 	}
 }

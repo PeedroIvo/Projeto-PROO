@@ -1,9 +1,5 @@
 package sei;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-
 public class DadosPessoais {
 	private String cpf;
 	private String rg;
@@ -58,22 +54,5 @@ public class DadosPessoais {
 
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
-	}
-	
-	public void criar (Connection conexao, int cod, DadosPessoais dados) {
-		String sql = "insert into dadosPessoais values (?, ?, ?, ?, ?, ?)";
-		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-			stmt.setInt(1, cod);
-			stmt.setString(2, dados.getCpf());
-			stmt.setString(3, dados.getRg());
-			stmt.setString(4, dados.getEmail());
-			stmt.setString(5, dados.getTelefone());
-			stmt.setString(6, dados.getCelular());
-			stmt.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		dados.getEndereco().criar(conexao, cod, dados.getEndereco());
 	}
 }

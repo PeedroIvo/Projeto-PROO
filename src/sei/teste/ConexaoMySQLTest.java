@@ -3,7 +3,7 @@ package sei.teste;
 import org.junit.Test;
 
 import junit.framework.TestCase;
-import sei.database.ConexaoMySQL;
+import sei.persistencia.conexao.ConexaoMySQL;
 
 public class ConexaoMySQLTest extends TestCase {
 
