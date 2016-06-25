@@ -41,4 +41,14 @@ public class UsuarioCRUD {
 		
 		return 0;
 	}
+	
+	public void mudarSenha(Connection conexao,String senha){
+		String sql = "update set usuario senha = '?' where ";
+		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+			stmt.setString(1,senha);
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
