@@ -59,8 +59,8 @@ public class DadosPessoaisCRUD {
 				dados.setCpf(rs.getString("cpf"));
 				dados.setEmail(rs.getString("email"));
 				dados.setEndereco(enderecoCRUD.procuraEndereco(conexao, rs.getInt("codUsuario")));
-				dados.setRg("rg");
-				dados.setTelefone("telefone");
+				dados.setRg(rs.getString("rg"));
+				dados.setTelefone(rs.getString("telefone"));
 								
 				return dados;
 			}

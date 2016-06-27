@@ -9,6 +9,7 @@ public abstract class Usuario {
 	protected UsuarioCRUD usuarioCRUD = new UsuarioCRUD();
 	protected AlunoCRUD alunoCRUD = new AlunoCRUD();
 	protected ProfessorCRUD professorCRUD = new ProfessorCRUD();
+	protected DadosPessoaisCRUD dadosCRUD = new DadosPessoaisCRUD();
 	protected DisciplinaCRUD disciplinaCRUD = new DisciplinaCRUD();
 	protected TurmaCRUD turmaCRUD = new TurmaCRUD();
 	protected NotaCRUD notaCRUD = new NotaCRUD();
@@ -87,5 +88,43 @@ public abstract class Usuario {
 		this.usuarioCRUD.updateSenha(conexao, this.getLogin(), novaSenha);
 		
 		System.out.println("\nSenha alterada com sucesso!\n");
+	}
+	
+	public char confirmar(String pergunta) {
+		char resposta;
+		
+		do {
+			System.out.print(pergunta);
+			resposta = input.next().charAt(0);
+			
+			if (resposta != 'S' && resposta != 'N'){
+				System.out.println("Resposta inválida! Digite S ou N");
+			}
+		} while (resposta != 'S' && resposta != 'N');
+		
+		return resposta;
+	}
+	
+	public String formataNota(double nota) {
+		String notaF = String.format("%.2f", nota);
+		
+		return notaF;
+	}
+	
+	public void visualizarDadosPessoais() {
+		DadosPessoais dados = dadosCRUD.procuraDadosPessoais(conexao, this.getCodUsuario());
+		
+		System.out.println("Nome: " + this.getNome());
+		System.out.println("CPF: " + dados.getCpf());
+		System.out.println("RG: " + dados.getRg());
+		System.out.println("Email: " + dados.getEmail());
+		System.out.println("Telefone: " + dados.getTelefone());
+		System.out.println("Celular: " + dados.getCelular());
+		System.out.println("\nCEP: " + dados.getEndereco().getCep());
+		System.out.println("Rua: " + dados.getEndereco().getRua());
+		System.out.println("Número: " + dados.getEndereco().getnCasa());
+		System.out.println("Bairro: " + dados.getEndereco().getBairro());
+		System.out.println("Complemento: " + dados.getEndereco().getComplemento());
+		System.out.println("Cidade, Estado: " + dados.getEndereco().getCidade() + ", " + dados.getEndereco().getEstado() + "\n");
 	}
 }

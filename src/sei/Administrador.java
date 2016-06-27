@@ -18,18 +18,19 @@ public class Administrador extends Usuario {
 			System.out.println("[3] Cadastrar professor");
 			System.out.println("[4] Descadastrar professor");
 			System.out.println("[5] Quadro de professores");
-			System.out.println("[6] Visualizar turma");
-			System.out.println("[7] Mudar a senha");
-			System.out.println("[8] Logout");
+			System.out.println("[6] Visualizar boletim de aluno");
+			System.out.println("[7] Visualizar turma");
+			System.out.println("[8] Mudar a senha");
+			System.out.println("[9] Logout");
 
 			do {
 				System.out.print("Digite sua opção: ");
 				opcao = input.nextInt();
 
-				if (opcao <= 0 || opcao > 8) {
+				if (opcao <= 0 || opcao > 9) {
 					System.out.println("Opção inválida! Tente novamente!");
 				}
-			} while (opcao <= 0 || opcao > 8);
+			} while (opcao <= 0 || opcao > 9);
 			
 			System.out.println();
 
@@ -44,11 +45,13 @@ public class Administrador extends Usuario {
 			} else if (opcao == 5) {
 				this.quadroProfessores();
 			} else if (opcao == 6) {
-				this.visualizarTurma();
+				this.visualizarBoletim();
 			} else if (opcao == 7) {
+				this.visualizarTurma();
+			} else if (opcao == 8) {
 				this.mudarSenha();
 			}
-		} while (opcao != 8);
+		} while (opcao != 9);
 	}
 	
 	public void matricularAluno() {
@@ -171,6 +174,7 @@ public class Administrador extends Usuario {
 			char resposta = this.confirmar("Tem certeza que deseja cancelar esta matricula (S ou N)? ");
 			
 			if (resposta == 'S') {
+				notaCRUD.apagarNotasAluno(conexao, cod);
 				alunoCRUD.apagar(conexao, cod);
 				
 				System.out.println("\nCancelamento de matrícula efetuado com sucesso!");
@@ -375,18 +379,57 @@ public class Administrador extends Usuario {
 		System.out.println();
 	}
 	
-	public char confirmar(String pergunta) {
-		char resposta;
+	public void visualizarBoletim() {
+		System.out.print("Digite o código de matrícula do Aluno: ");
+		int cod = input.nextInt();
 		
-		do {
-			System.out.print(pergunta);
-			resposta = input.next().charAt(0);
+		Aluno aluno = alunoCRUD.procuraAluno(conexao, cod);
+
+		System.out.println();
+		
+		if (aluno == null)  {
+			System.out.println("Nenhum aluno foi encontrado com esse código de matrícula!");
+		} else {
+			int serieDoAluno = turmaCRUD.procuraTurma(conexao, aluno.getCodTurmaAtual()).getSerie();
 			
-			if (resposta != 'S' && resposta != 'N'){
-				System.out.println("Resposta inválida! Digite S ou N");
+			List<Disciplina> disciplinas = disciplinaCRUD.listarPorSerie(conexao, serieDoAluno);
+			List<Nota> notas = notaCRUD.procuraListNotasAluno(conexao, aluno.getCodUsuario());
+			
+			System.out.println("[" + aluno.getCodUsuario() + "] Aluno: " + aluno.getNome() + " | " + serieDoAluno + "º Ano");
+			
+			if(disciplinas.isEmpty()) {
+				System.out.println("Este aluno não está matriculado em nenhuma disciplina!");
+			} else {
+				for(Disciplina disciplina:disciplinas) {
+					double notaB1=0, notaB2=0, notaB3=0, notaB4=0;
+					
+					for(Nota nota:notas){
+						if(nota.getMatricAluno() == aluno.getCodUsuario() && nota.getCodDisciplina() == disciplina.getCodDisciplina()) {
+							if(nota.getBimestre() == 1) {
+								notaB1 = nota.getNota();
+							} else if(nota.getBimestre() == 2) {
+								notaB2 = nota.getNota();
+							} else if(nota.getBimestre() == 3) {
+								notaB3 = nota.getNota();
+							} else if(nota.getBimestre() == 4) {
+								notaB4 = nota.getNota();
+							}
+						}
+					}
+					
+					double media = (notaB1 + notaB2 + notaB3 + notaB4)/4;
+					String mediaF = formataNota(media);
+					
+					String notaB1F = formataNota(notaB1);
+					String notaB2F = formataNota(notaB2);
+					String notaB3F = formataNota(notaB3);
+					String notaB4F = formataNota(notaB4);
+					
+					System.out.println("Disciplina: " + disciplina.getSigla() + " (" + disciplina.getNome() + ") | N1: " + notaB1F + " | N2: " + notaB2F + " | N3: " + notaB3F + " | N4: " + notaB4F + " | Média: " + mediaF);
+				}
+				
+				System.out.println();
 			}
-		} while (resposta != 'S' && resposta != 'N');
-		
-		return resposta;
+		}
 	}
 }

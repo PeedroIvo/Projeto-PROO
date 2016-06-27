@@ -2,10 +2,15 @@ package sei.persistencia.crud;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import sei.Nota;
 
 public class NotaCRUD {
-	public void criar (Connection conexao, int matricAluno, int codDisciplina, int bimestre, double nota) {
+	public void criar(Connection conexao, int matricAluno, int codDisciplina, int bimestre, double nota) {
 		String sql = "insert into nota values (?, ?, ?, ?, ?)";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 			stmt.setInt(1, matricAluno);
@@ -17,5 +22,54 @@ public class NotaCRUD {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void apagarNotasAluno (Connection conexao, int cod) {
+		try (PreparedStatement stmt = conexao.prepareStatement("delete from nota where matricAluno='" + cod + "'");) {
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public List<Nota> selectListNota(Connection conexao, String sql) {
+		List<Nota> notas = new ArrayList<>();
+		
+		try (PreparedStatement stmt = conexao.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery();) {
+			if(rs.next()) {
+				do {
+					Nota nota = new Nota();
+					
+					nota.setAno(rs.getInt("ano"));
+					nota.setBimestre(rs.getInt("bimestre"));
+					nota.setCodDisciplina(rs.getInt("codDisciplina"));
+					nota.setMatricAluno(rs.getInt("matricAluno"));
+					nota.setNota(rs.getDouble("nota"));
+					
+					notas.add(nota);
+				} while (rs.next());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return notas;
+	}
+	
+	public List<Nota> procuraListNota (Connection conexao, int codDisciplina, int bimestre, int codTurma) {
+		String sql = "select * from nota, aluno where codDisciplina='" + codDisciplina + "' and bimestre='" + bimestre + "' and aluno.codTurmaAtual='" + codTurma + "' and aluno.matricAluno=nota.matricAluno";
+		
+		List<Nota> notas = this.selectListNota(conexao, sql);
+		
+		return notas;
+	}
+	
+	public List<Nota> procuraListNotasAluno (Connection conexao, int matricAluno) {
+		String sql = "select * from nota where matricAluno='" + matricAluno + "'";
+		
+		List<Nota> notas = this.selectListNota(conexao, sql);
+		
+		return notas;
 	}
 }

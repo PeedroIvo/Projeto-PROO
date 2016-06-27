@@ -51,13 +51,13 @@ public class EnderecoCRUD {
 			if (rs.first()) {
 				Endereco endereco = new Endereco();
 				
-				endereco.setBairro("bairro");
-				endereco.setCep("cep");
-				endereco.setCidade("cidade");
-				endereco.setComplemento("complemento");
-				endereco.setEstado("estado");
-				endereco.setnCasa("nCasa");
-				endereco.setRua("rua");
+				endereco.setBairro(rs.getString("bairro"));
+				endereco.setCep(rs.getString("cep"));
+				endereco.setCidade(rs.getString("cidade"));
+				endereco.setComplemento(rs.getString("complemento"));
+				endereco.setEstado(rs.getString("estado"));
+				endereco.setnCasa(rs.getString("nCasa"));
+				endereco.setRua(rs.getString("rua"));
 								
 				return endereco;
 			}
