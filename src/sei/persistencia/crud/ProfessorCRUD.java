@@ -2,6 +2,7 @@ package sei.persistencia.crud;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import sei.Professor;
@@ -25,5 +26,70 @@ public class ProfessorCRUD extends UsuarioCRUD{
 		}
 		
 		dadosCRUD.criar(conexao, professor.getCodUsuario(), professor.getDadosPessoais());
+	}
+	
+	public String procuraNomeProfessor(Connection conexao, int cod) {
+		String sql = "select * from professor, usuario where professor.codProfessor='" + cod + "' and usuario.codUsuario='" + cod + "'";
+		
+		Professor professor = this.selectProfessor(conexao, sql);
+		
+		if (professor != null) {
+			return professor.getNome();
+		}
+		
+		return null;
+	}
+	
+	public Professor procuraProfessor(Connection conexao, int cod) {
+		String sql = "select * from professor, usuario where professor.codProfessor='" + cod + "' and usuario.codUsuario='" + cod + "'";
+		
+		Professor professor = this.selectProfessor(conexao, sql);
+		
+		if (professor != null) {
+			return professor;
+		}
+		
+		return null;
+	}
+	
+	public Professor selectProfessor(Connection conexao, String sql) {
+		try (PreparedStatement stmt = conexao.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery();) {
+			if (rs.first()) {
+				Professor professor = new Professor();
+				
+				professor.setCodUsuario(rs.getInt("codUsuario"));
+				professor.setDadosPessoais(dadosCRUD.procuraDadosPessoais(conexao, rs.getInt("codUsuario")));
+				professor.setDataAdmissao(rs.getString("dataAdmissao"));
+				professor.setLogin(rs.getString("login"));
+				professor.setNome(rs.getString("nome"));
+				professor.setSenha("senha");
+				professor.setTipoUsuario(rs.getString("tipoUsuario").charAt(0));
+				
+				return professor;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public void apagar (Connection conexao, int cod) {		
+		try (PreparedStatement stmt = conexao.prepareStatement("update disciplina set codProfessor=NULL where codProfessor='" + cod + "'")) {
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		try (PreparedStatement stmt = conexao.prepareStatement("delete from professor where codProfessor='" + cod + "'");) {
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		this.dadosCRUD.apagar(conexao, cod);
+		
+		this.apagarUsuario(conexao, cod);
 	}
 }

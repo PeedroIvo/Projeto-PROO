@@ -1,5 +1,110 @@
 package sei.persistencia.crud;
 
-public class DisciplinaCRUD {
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
+import sei.Disciplina;
+
+public class DisciplinaCRUD {
+	private ProfessorCRUD professorCRUD = new ProfessorCRUD();
+	
+	public List<Disciplina> listarPorSerie(Connection conexao, int serie) {
+		String sql = "select * from disciplina where serie='" + serie + "'";
+		
+		List<Disciplina> disciplinas = this.selectListDisciplina(conexao, sql);
+		
+		return disciplinas;
+	}
+	
+	public List<Disciplina> listarPorProfessor(Connection conexao, int codProfessor) {
+		String sql = "select * from disciplina where codProfessor='" + codProfessor + "'";
+		
+		List<Disciplina> disciplinas = this.selectListDisciplina(conexao, sql);
+		
+		return disciplinas;
+	}
+	
+	public List<Disciplina> selectListDisciplina(Connection conexao, String sql){
+		List<Disciplina> disciplinas = new ArrayList<>();
+		
+		try (PreparedStatement stmt = conexao.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery();) {
+			if(rs.next()) {
+				do {
+					Disciplina disciplina = new Disciplina();
+					
+					disciplina.setCodDisciplina(rs.getInt("codDisciplina"));
+					disciplina.setNome(rs.getString("nome"));
+					disciplina.setSigla(rs.getString("sigla"));
+					disciplina.setSerie(rs.getInt("serie"));
+					disciplina.setProfResponsavel(professorCRUD.procuraProfessor(conexao, rs.getInt("codProfessor")));
+					
+					disciplinas.add(disciplina);
+				} while (rs.next());
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return disciplinas;
+	}
+	
+	public void updateCodProfessor(Connection conexao, int codDisciplina, int codProfessor) {
+		String sql = "update disciplina set codProfessor='" + codProfessor + "' where codDisciplina='" + codDisciplina + "'";
+		
+		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
+			stmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String procuraNomeDisciplina(Connection conexao, int cod) {
+		String sql = "select * from disciplina where codDisciplina='" + cod + "'";
+		
+		Disciplina disciplina = this.selectDisciplina(conexao, sql);
+		
+		if (disciplina != null) {
+			return disciplina.getSigla() + " (" + disciplina.getNome() + ")";
+		}
+		
+		return null;
+	}
+	
+	public Disciplina procuraDisciplina(Connection conexao, int cod) {
+		String sql = "select * from disciplina where codDisciplina='" + cod + "'";
+		
+		Disciplina disciplina = this.selectDisciplina(conexao, sql);
+		
+		if (disciplina != null) {
+			return disciplina;
+		}
+		
+		return null;
+	}
+	
+	public Disciplina selectDisciplina(Connection conexao, String sql) {
+		try (PreparedStatement stmt = conexao.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery();) {
+			if (rs.first()) {
+				Disciplina disciplina = new Disciplina();
+				
+				disciplina.setCodDisciplina(rs.getInt("codDisciplina"));
+				disciplina.setNome(rs.getString("nome"));
+				disciplina.setSigla(rs.getString("sigla"));
+				disciplina.setSerie(rs.getInt("serie"));
+				disciplina.setProfResponsavel(professorCRUD.procuraProfessor(conexao, rs.getInt("codProfessor")));
+				
+				return disciplina;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
 }

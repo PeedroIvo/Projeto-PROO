@@ -42,10 +42,22 @@ public class UsuarioCRUD {
 		return 0;
 	}
 	
-	public void mudarSenha(Connection conexao,String senha){
-		String sql = "update set usuario senha = '?' where ";
+	public boolean usuarioExiste(Connection conexao, String loginDigitado) {
+		try (PreparedStatement stmt = conexao.prepareStatement("select * from usuario where login='" + loginDigitado + "'");
+				ResultSet rs = stmt.executeQuery();) {
+			if (rs.first()) {
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return true;
+	}
+	
+	public void updateSenha(Connection conexao, String login, String novaSenha){
+		String sql = "update usuario set senha = '" + novaSenha + "' where login='" + login + "'";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
-			stmt.setString(1,senha);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

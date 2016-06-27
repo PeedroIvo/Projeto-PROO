@@ -59,12 +59,20 @@ public class Turma {
 	public List<Aluno> getAlunos() {
 		return alunos;
 	}
-	
+
+	public void setAlunos(List<Aluno> alunos) {
+		this.alunos = alunos;
+	}
+
 	public void addDisciplina(Disciplina disciplina) {
 		disciplinas.add(disciplina);
 	}
 
 	public List<Disciplina> getDisciplinas() {
 		return disciplinas;
+	}
+	
+	public void setDisciplinas(List<Disciplina> disciplinas) {
+		this.disciplinas = disciplinas;
 	}
 }

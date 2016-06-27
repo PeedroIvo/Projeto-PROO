@@ -22,7 +22,7 @@ public class ExperimentandoClasses {
 		disciplina.setCodDisciplina(1);
 		disciplina.setNome("Ingles");
 		disciplina.setProfResponsavel(professor);
-		disciplina.setCodTurma(turma.getCodTurma());
+		disciplina.setSerie(1);
 		disciplina.setSigla("ING");
 		
 		aluno1.setNome("Aluno 1");

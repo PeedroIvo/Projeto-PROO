@@ -1,11 +1,8 @@
 package sei;
 
 import java.sql.Connection;
-import java.util.Scanner;
 
 public class Aluno extends Usuario {
-	private Scanner input = new Scanner(System.in);
-	
 	private int idade;
 	private char sexo;
 	private int codTurmaAtual;
