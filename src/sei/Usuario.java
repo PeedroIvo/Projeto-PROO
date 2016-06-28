@@ -1,6 +1,7 @@
 package sei;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 import sei.persistencia.crud.*;
@@ -71,7 +72,7 @@ public abstract class Usuario implements Menu {
 		this.tipoUsuario = tipoUsuario;
 	}
 	
-	public void mudarSenha() {
+	public void mudarSenha() throws SQLException {
 		String novaSenha;
 		
 		do {
@@ -109,7 +110,7 @@ public abstract class Usuario implements Menu {
 		return notaF;
 	}
 	
-	public void visualizarDadosPessoais() {
+	public void visualizarDadosPessoais() throws SQLException {
 		DadosPessoais dados = dadosCRUD.procuraDadosPessoais(conexao, this.getCodUsuario());
 		
 		System.out.println("Nome: " + this.getNome());

@@ -1,12 +1,13 @@
 package sei;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.List;
 
 public class Administrador extends Usuario {
 	@Override
-	public void menu(Connection conexao) {
+	public void menu(Connection conexao) throws SQLException {
 		this.setConexao(conexao);
 		int opcao;
 		
@@ -54,7 +55,7 @@ public class Administrador extends Usuario {
 		} while (opcao != 9);
 	}
 	
-	public void matricularAluno() {
+	public void matricularAluno() throws SQLException {
 		Aluno novoAluno = new Aluno();	
 		
 		novoAluno.setTipoUsuario('a');
@@ -159,7 +160,7 @@ public class Administrador extends Usuario {
 		System.out.println("\nAluno matriculado com sucesso!\nLogin: " + novoAluno.getLogin() + "\nSenha Padrão: 123456\n");
 	}
 	
-	public void desmatricularAluno() {
+	public void desmatricularAluno() throws SQLException {
 		System.out.println("Atenção! O cancelamento de matrícula não poderá ser desfeito!");
 		System.out.print("Digite o código de matrícula do Aluno: ");
 		int cod = input.nextInt();
@@ -184,7 +185,7 @@ public class Administrador extends Usuario {
 		System.out.println();
 	}
 	
-	public void cadastrarProfessor() {
+	public void cadastrarProfessor() throws SQLException {
 		Professor novoProfessor = new Professor();
 		
 		Calendar cal = Calendar.getInstance(); 
@@ -254,7 +255,7 @@ public class Administrador extends Usuario {
 		System.out.println("\nProfessor matriculado com sucesso!\nLogin: " + novoProfessor.getLogin() + "\nSenha Padrão: 123456\n");
 	}
 	
-	public void quadroProfessores() {
+	public void quadroProfessores() throws SQLException {
 		int serie;
 		
 		do {
@@ -289,7 +290,7 @@ public class Administrador extends Usuario {
 		System.out.println();
 	}
 	
-	public void editaProfDisciplina() {
+	public void editaProfDisciplina() throws SQLException {
 		System.out.print("Digite o código da disciplina: ");
 		int codDisciplina = input.nextInt();
 		
@@ -312,7 +313,7 @@ public class Administrador extends Usuario {
 		}
 	}
 	
-	public void descadastrarProfessor() {
+	public void descadastrarProfessor() throws SQLException {
 		System.out.println("Atenção! O cancelamento de cadastro não poderá ser desfeito!");
 		System.out.print("Digite o código de cadastro do Professor: ");
 		int cod = input.nextInt();
@@ -336,7 +337,7 @@ public class Administrador extends Usuario {
 		System.out.println();
 	}
 	
-	public void visualizarTurma() {
+	public void visualizarTurma() throws SQLException {
 		System.out.println("Digite as informações da turma que deseja consultar abaixo");
 		
 		int serie;
@@ -379,7 +380,7 @@ public class Administrador extends Usuario {
 		System.out.println();
 	}
 	
-	public void visualizarBoletim() {
+	public void visualizarBoletim() throws SQLException {
 		System.out.print("Digite o código de matrícula do Aluno: ");
 		int cod = input.nextInt();
 		

@@ -1,6 +1,7 @@
 package sei;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 public class Professor extends Usuario {
@@ -24,7 +25,7 @@ public class Professor extends Usuario {
 	}
 	
 	@Override
-	public void menu(Connection conexao) {
+	public void menu(Connection conexao) throws SQLException {
 		this.setConexao(conexao);
 		int opcao;
 		
@@ -60,7 +61,7 @@ public class Professor extends Usuario {
 		} while (opcao != 5);
 	}
 	
-	public void visualizarDisciplinas() {
+	public void visualizarDisciplinas() throws SQLException {
 		
 		List<Disciplina> disciplinas = disciplinaCRUD.listarPorProfessor(conexao, this.getCodUsuario());
 		
@@ -83,7 +84,7 @@ public class Professor extends Usuario {
 		System.out.println();
 	}
 	
-	public void addNotas() {
+	public void addNotas() throws SQLException {
 		int codDisciplina;
 		
 		System.out.print("Digite o cógido da disciplina: ");
@@ -153,7 +154,7 @@ public class Professor extends Usuario {
 		System.out.println();
 	}
 	
-	public boolean verificaDisciplinaProfessor(int codDisciplina) {
+	public boolean verificaDisciplinaProfessor(int codDisciplina) throws SQLException {
 		List<Disciplina> disciplinas = disciplinaCRUD.listarPorProfessor(conexao, this.getCodUsuario());
 		
 		for (Disciplina disciplina:disciplinas) {
@@ -165,7 +166,7 @@ public class Professor extends Usuario {
 		return false;
 	}
 	
-	public void visualizarNotas() {
+	public void visualizarNotas() throws SQLException {
 		int codDisciplina;
 		
 		System.out.print("Digite o cógido da disciplina: ");

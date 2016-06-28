@@ -1,6 +1,7 @@
 package sei;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 public class Aluno extends Usuario {
@@ -42,7 +43,7 @@ public class Aluno extends Usuario {
 	}
 	
 	@Override
-	public void menu(Connection conexao) {
+	public void menu(Connection conexao) throws SQLException {
 		this.setConexao(conexao);
 		int opcao;
 		
@@ -75,7 +76,7 @@ public class Aluno extends Usuario {
 		} while (opcao != 4);
 	}
 	
-	public void visualizarBoletim () {
+	public void visualizarBoletim () throws SQLException {
 		this.setCodTurmaAtual(alunoCRUD.procuraAluno(conexao, getCodUsuario()).getCodTurmaAtual());
 		int serieDoAluno = turmaCRUD.procuraTurma(conexao, this.getCodTurmaAtual()).getSerie();
 		

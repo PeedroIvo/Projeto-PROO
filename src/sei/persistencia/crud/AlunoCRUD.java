@@ -13,7 +13,7 @@ import sei.Usuario;
 public class AlunoCRUD extends UsuarioCRUD{
 	private DadosPessoaisCRUD dadosCRUD = new DadosPessoaisCRUD();
 	
-	public void criar (Connection conexao, Aluno aluno) {
+	public void criar (Connection conexao, Aluno aluno) throws SQLException {
 		this.criarUsuario(conexao, (Usuario)aluno);
 		
 		aluno.setCodUsuario(this.pegarCodigo(conexao, aluno.getLogin()));
@@ -26,17 +26,17 @@ public class AlunoCRUD extends UsuarioCRUD{
 			stmt.setString(4, String.valueOf(aluno.getSexo()));
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		dadosCRUD.criar(conexao, aluno.getCodUsuario(), aluno.getDadosPessoais());
 	}
 	
-	public void apagar (Connection conexao, int cod) {
+	public void apagar (Connection conexao, int cod) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement("delete from aluno where matricAluno='" + cod + "'");) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		this.dadosCRUD.apagar(conexao, cod);
@@ -44,7 +44,7 @@ public class AlunoCRUD extends UsuarioCRUD{
 		this.apagarUsuario(conexao, cod);
 	}
 	
-	public String procuraNomeAluno(Connection conexao, int cod) {
+	public String procuraNomeAluno(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from aluno, usuario where aluno.matricAluno='" + cod + "' and usuario.codUsuario='" + cod + "'";
 		
 		Aluno aluno = this.selectAluno(conexao, sql);
@@ -56,7 +56,7 @@ public class AlunoCRUD extends UsuarioCRUD{
 		return null;
 	}
 	
-	public Aluno procuraAluno(Connection conexao, int cod) {
+	public Aluno procuraAluno(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from aluno, usuario where aluno.matricAluno='" + cod + "' and usuario.codUsuario='" + cod + "'";
 		
 		Aluno aluno = this.selectAluno(conexao, sql);
@@ -68,7 +68,7 @@ public class AlunoCRUD extends UsuarioCRUD{
 		return null;
 	}
 	
-	public Aluno selectAluno(Connection conexao, String sql) {
+	public Aluno selectAluno(Connection conexao, String sql) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if (rs.first()) {
@@ -87,13 +87,13 @@ public class AlunoCRUD extends UsuarioCRUD{
 				return aluno;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		return null;
 	}
 	
-	public List<Aluno> listarPorTurma(Connection conexao, int codTurma) {
+	public List<Aluno> listarPorTurma(Connection conexao, int codTurma) throws SQLException {
 		String sql = "select * from aluno, usuario where aluno.matricAluno=usuario.codUsuario and aluno.codTurmaAtual='" + codTurma + "'";
 		
 		List<Aluno> alunos = this.selectListAluno(conexao, sql);
@@ -101,7 +101,7 @@ public class AlunoCRUD extends UsuarioCRUD{
 		return alunos;
 	}
 	
-	public List<Aluno> selectListAluno(Connection conexao, String sql){
+	public List<Aluno> selectListAluno(Connection conexao, String sql) throws SQLException{
 		List<Aluno> alunos = new ArrayList<>();
 		
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
@@ -124,7 +124,7 @@ public class AlunoCRUD extends UsuarioCRUD{
 				} while (rs.next());
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		return alunos;

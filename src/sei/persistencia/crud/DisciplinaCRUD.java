@@ -12,7 +12,7 @@ import sei.Disciplina;
 public class DisciplinaCRUD {
 	private ProfessorCRUD professorCRUD = new ProfessorCRUD();
 	
-	public List<Disciplina> listarPorSerie(Connection conexao, int serie) {
+	public List<Disciplina> listarPorSerie(Connection conexao, int serie) throws SQLException {
 		String sql = "select * from disciplina where serie='" + serie + "'";
 		
 		List<Disciplina> disciplinas = this.selectListDisciplina(conexao, sql);
@@ -20,7 +20,7 @@ public class DisciplinaCRUD {
 		return disciplinas;
 	}
 	
-	public List<Disciplina> listarPorProfessor(Connection conexao, int codProfessor) {
+	public List<Disciplina> listarPorProfessor(Connection conexao, int codProfessor) throws SQLException {
 		String sql = "select * from disciplina where codProfessor='" + codProfessor + "'";
 		
 		List<Disciplina> disciplinas = this.selectListDisciplina(conexao, sql);
@@ -28,7 +28,7 @@ public class DisciplinaCRUD {
 		return disciplinas;
 	}
 	
-	public List<Disciplina> selectListDisciplina(Connection conexao, String sql){
+	public List<Disciplina> selectListDisciplina(Connection conexao, String sql) throws SQLException{
 		List<Disciplina> disciplinas = new ArrayList<>();
 		
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
@@ -47,23 +47,23 @@ public class DisciplinaCRUD {
 				} while (rs.next());
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		return disciplinas;
 	}
 	
-	public void updateCodProfessor(Connection conexao, int codDisciplina, int codProfessor) {
+	public void updateCodProfessor(Connection conexao, int codDisciplina, int codProfessor) throws SQLException {
 		String sql = "update disciplina set codProfessor='" + codProfessor + "' where codDisciplina='" + codDisciplina + "'";
 		
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 	}
 	
-	public String procuraNomeDisciplina(Connection conexao, int cod) {
+	public String procuraNomeDisciplina(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from disciplina where codDisciplina='" + cod + "'";
 		
 		Disciplina disciplina = this.selectDisciplina(conexao, sql);
@@ -75,7 +75,7 @@ public class DisciplinaCRUD {
 		return null;
 	}
 	
-	public Disciplina procuraDisciplina(Connection conexao, int cod) {
+	public Disciplina procuraDisciplina(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from disciplina where codDisciplina='" + cod + "'";
 		
 		Disciplina disciplina = this.selectDisciplina(conexao, sql);
@@ -87,7 +87,7 @@ public class DisciplinaCRUD {
 		return null;
 	}
 	
-	public Disciplina selectDisciplina(Connection conexao, String sql) {
+	public Disciplina selectDisciplina(Connection conexao, String sql) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if (rs.first()) {
@@ -102,7 +102,7 @@ public class DisciplinaCRUD {
 				return disciplina;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		return null;

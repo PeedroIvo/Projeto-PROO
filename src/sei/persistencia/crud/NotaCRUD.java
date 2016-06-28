@@ -10,7 +10,7 @@ import java.util.List;
 import sei.Nota;
 
 public class NotaCRUD {
-	public void criar(Connection conexao, int matricAluno, int codDisciplina, int bimestre, double nota) {
+	public void criar(Connection conexao, int matricAluno, int codDisciplina, int bimestre, double nota) throws SQLException {
 		String sql = "insert into nota values (?, ?, ?, ?, ?)";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 			stmt.setInt(1, matricAluno);
@@ -20,19 +20,19 @@ public class NotaCRUD {
 			stmt.setDouble(5, nota);
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 	}
 	
-	public void apagarNotasAluno (Connection conexao, int cod) {
+	public void apagarNotasAluno (Connection conexao, int cod) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement("delete from nota where matricAluno='" + cod + "'");) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 	}
 	
-	public List<Nota> selectListNota(Connection conexao, String sql) {
+	public List<Nota> selectListNota(Connection conexao, String sql) throws SQLException {
 		List<Nota> notas = new ArrayList<>();
 		
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
@@ -51,13 +51,13 @@ public class NotaCRUD {
 				} while (rs.next());
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		return notas;
 	}
 	
-	public List<Nota> procuraListNota (Connection conexao, int codDisciplina, int bimestre, int codTurma) {
+	public List<Nota> procuraListNota (Connection conexao, int codDisciplina, int bimestre, int codTurma) throws SQLException {
 		String sql = "select * from nota, aluno where codDisciplina='" + codDisciplina + "' and bimestre='" + bimestre + "' and aluno.codTurmaAtual='" + codTurma + "' and aluno.matricAluno=nota.matricAluno";
 		
 		List<Nota> notas = this.selectListNota(conexao, sql);
@@ -65,7 +65,7 @@ public class NotaCRUD {
 		return notas;
 	}
 	
-	public List<Nota> procuraListNotasAluno (Connection conexao, int matricAluno) {
+	public List<Nota> procuraListNotasAluno (Connection conexao, int matricAluno) throws SQLException {
 		String sql = "select * from nota where matricAluno='" + matricAluno + "'";
 		
 		List<Nota> notas = this.selectListNota(conexao, sql);

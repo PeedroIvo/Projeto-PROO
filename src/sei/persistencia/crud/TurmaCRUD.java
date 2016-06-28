@@ -11,20 +11,20 @@ public class TurmaCRUD {
 	private AlunoCRUD alunoCRUD = new AlunoCRUD();
 	private DisciplinaCRUD disciplinaCRUD = new DisciplinaCRUD();
 	
-	public int procuraCodTurma(Connection conexao, int serie, char turno) {
+	public int procuraCodTurma(Connection conexao, int serie, char turno) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement("select codTurma from turma where serie='" + serie + "' and turno='" + turno + "'");
 				ResultSet rs = stmt.executeQuery();) {
 			while (rs.next()) {
 				return rs.getInt("codTurma");
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		return 0;
 	}
 	
-	public Turma procuraTurma(Connection conexao, int cod) {
+	public Turma procuraTurma(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from turma where codTurma='" + cod + "'";
 		
 		Turma turma = this.selectTurma(conexao, sql);
@@ -36,7 +36,7 @@ public class TurmaCRUD {
 		return null;
 	}
 	
-	public Turma selectTurma(Connection conexao, String sql) {
+	public Turma selectTurma(Connection conexao, String sql) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if (rs.first()) {
@@ -53,7 +53,7 @@ public class TurmaCRUD {
 				return turma;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		return null;

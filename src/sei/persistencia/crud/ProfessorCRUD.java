@@ -11,7 +11,7 @@ import sei.Usuario;
 public class ProfessorCRUD extends UsuarioCRUD{
 	private DadosPessoaisCRUD dadosCRUD = new DadosPessoaisCRUD(); 
 	
-	public void criar (Connection conexao, Professor professor) {
+	public void criar (Connection conexao, Professor professor) throws SQLException {
 		this.criarUsuario(conexao, (Usuario)professor);
 		
 		professor.setCodUsuario(this.pegarCodigo(conexao, professor.getLogin()));
@@ -22,13 +22,13 @@ public class ProfessorCRUD extends UsuarioCRUD{
 			stmt.setString(2, professor.getDataAdmissao());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		dadosCRUD.criar(conexao, professor.getCodUsuario(), professor.getDadosPessoais());
 	}
 	
-	public String procuraNomeProfessor(Connection conexao, int cod) {
+	public String procuraNomeProfessor(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from professor, usuario where professor.codProfessor='" + cod + "' and usuario.codUsuario='" + cod + "'";
 		
 		Professor professor = this.selectProfessor(conexao, sql);
@@ -40,7 +40,7 @@ public class ProfessorCRUD extends UsuarioCRUD{
 		return null;
 	}
 	
-	public Professor procuraProfessor(Connection conexao, int cod) {
+	public Professor procuraProfessor(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from professor, usuario where professor.codProfessor='" + cod + "' and usuario.codUsuario='" + cod + "'";
 		
 		Professor professor = this.selectProfessor(conexao, sql);
@@ -52,7 +52,7 @@ public class ProfessorCRUD extends UsuarioCRUD{
 		return null;
 	}
 	
-	public Professor selectProfessor(Connection conexao, String sql) {
+	public Professor selectProfessor(Connection conexao, String sql) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if (rs.first()) {
@@ -69,23 +69,23 @@ public class ProfessorCRUD extends UsuarioCRUD{
 				return professor;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		return null;
 	}
 	
-	public void apagar (Connection conexao, int cod) {		
+	public void apagar (Connection conexao, int cod) throws SQLException {		
 		try (PreparedStatement stmt = conexao.prepareStatement("update disciplina set codProfessor=NULL where codProfessor='" + cod + "'")) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		try (PreparedStatement stmt = conexao.prepareStatement("delete from professor where codProfessor='" + cod + "'");) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		this.dadosCRUD.apagar(conexao, cod);

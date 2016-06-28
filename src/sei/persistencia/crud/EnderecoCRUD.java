@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import sei.Endereco;
 
 public class EnderecoCRUD {
-	public void criar(Connection conexao, int cod, Endereco endereco) {
+	public void criar(Connection conexao, int cod, Endereco endereco) throws SQLException {
 		String sql = "insert into endereco values (?, ?, ?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 			stmt.setInt(1, cod);
@@ -21,19 +21,19 @@ public class EnderecoCRUD {
 			stmt.setString(8, endereco.getEstado());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 	}
 	
-	public void apagar (Connection conexao, int cod) {
+	public void apagar (Connection conexao, int cod) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement("delete from endereco where codUsuario='" + cod + "'");) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 	}
 	
-	public Endereco procuraEndereco(Connection conexao, int cod) {
+	public Endereco procuraEndereco(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from endereco where codUsuario='" + cod + "'";
 		
 		Endereco endereco = this.selectEndereco(conexao, sql);
@@ -45,7 +45,7 @@ public class EnderecoCRUD {
 		return null;
 	}
 	
-	public Endereco selectEndereco(Connection conexao, String sql) {
+	public Endereco selectEndereco(Connection conexao, String sql) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if (rs.first()) {
@@ -62,7 +62,7 @@ public class EnderecoCRUD {
 				return endereco;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		return null;

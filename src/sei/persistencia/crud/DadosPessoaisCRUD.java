@@ -10,7 +10,7 @@ import sei.DadosPessoais;
 public class DadosPessoaisCRUD {
 	private EnderecoCRUD enderecoCRUD = new EnderecoCRUD();
 	
-	public void criar (Connection conexao, int cod, DadosPessoais dados) {
+	public void criar (Connection conexao, int cod, DadosPessoais dados) throws SQLException {
 		String sql = "insert into dadosPessoais values (?, ?, ?, ?, ?, ?)";
 		try (PreparedStatement stmt = conexao.prepareStatement(sql)) {
 			stmt.setInt(1, cod);
@@ -21,23 +21,23 @@ public class DadosPessoaisCRUD {
 			stmt.setString(6, dados.getCelular());
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		this.enderecoCRUD.criar(conexao, cod, dados.getEndereco());
 	}
 	
-	public void apagar (Connection conexao, int cod) {
+	public void apagar (Connection conexao, int cod) throws SQLException {
 		this.enderecoCRUD.apagar(conexao, cod);
 		
 		try (PreparedStatement stmt = conexao.prepareStatement("delete from dadosPessoais where codUsuario='" + cod + "'");) {
 			stmt.executeUpdate();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 	}
 	
-	public DadosPessoais procuraDadosPessoais(Connection conexao, int cod) {
+	public DadosPessoais procuraDadosPessoais(Connection conexao, int cod) throws SQLException {
 		String sql = "select * from dadospessoais where codUsuario='" + cod + "'";
 		
 		DadosPessoais dados = this.selectDadosPessoais(conexao, sql);
@@ -49,7 +49,7 @@ public class DadosPessoaisCRUD {
 		return null;
 	}
 	
-	public DadosPessoais selectDadosPessoais(Connection conexao, String sql) {
+	public DadosPessoais selectDadosPessoais(Connection conexao, String sql) throws SQLException {
 		try (PreparedStatement stmt = conexao.prepareStatement(sql);
 				ResultSet rs = stmt.executeQuery();) {
 			if (rs.first()) {
@@ -65,7 +65,7 @@ public class DadosPessoaisCRUD {
 				return dados;
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new SQLException("Erro: "+e.getMessage());
 		}
 		
 		return null;
