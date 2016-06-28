@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 import sei.persistencia.crud.*;
 
-public abstract class Usuario {	
+public abstract class Usuario implements Menu {	
 	protected UsuarioCRUD usuarioCRUD = new UsuarioCRUD();
 	protected AlunoCRUD alunoCRUD = new AlunoCRUD();
 	protected ProfessorCRUD professorCRUD = new ProfessorCRUD();
@@ -22,8 +22,6 @@ public abstract class Usuario {
 	private String senha;
 	private String nome;
 	private char tipoUsuario;
-	
-	public abstract void menu(Connection conexao);
 	
 	public Connection getConexao() {
 		return conexao;
